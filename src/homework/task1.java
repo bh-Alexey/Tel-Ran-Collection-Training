@@ -2,10 +2,11 @@ package homework;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Random;
 
 public class task1 {
 
-//1 уровень сложности: На этом занятии мы только разбирались с теорией коллекций + немного тренировались c arrayList,
+    //1 уровень сложности: На этом занятии мы только разбирались с теорией коллекций + немного тренировались c arrayList,
 //                     поэтому задание тоже будет чисто на тренировку
 //
 //  Создайте ArrayList, заполните его 100 случайными значениями, используя библиотеку Random
@@ -21,51 +22,43 @@ public class task1 {
 //      Пример, если список выглядит так - 5 -4 3 -2 1
 //      То мы выведем - 1
     public static void main(String[] args) {
-        int listCapacity = 100;
-        final int RANGE_COEFICIENT = 100_000;
+        int listSize = 100;
+        final int MAX_VALUE = 1000;
 
-        ArrayList<Integer> list = arrayListGenerator(listCapacity, RANGE_COEFICIENT);
+        ArrayList<Integer> list = arrayListGenerator(listSize, MAX_VALUE);
         System.out.println(list);
 
         printNextBigger(list);
 
         int min = minPositiveOfArrayList(list);
         System.out.println(min);
-
     }
 
-    public static int getRandom(int min, int max) {
-        return (int) (Math.random() * (max + 1 - min)) + min;
-    }
-
-    public static ArrayList<Integer> arrayListGenerator(int arrayListCapacity, int digitsInNumber) {
-        ArrayList<Integer> intArrayList = new ArrayList<>(arrayListCapacity);
-        int minNumber = Integer.MIN_VALUE + arrayListCapacity;
-        int maxNumber = Integer.MAX_VALUE - arrayListCapacity;
-        for (int i = 0; i < arrayListCapacity; i++) {
-            int number = getRandom(minNumber / digitsInNumber, maxNumber / digitsInNumber);
-            intArrayList.add(number);
+    public static ArrayList<Integer> arrayListGenerator(int arrayListSize, int maxValue) {
+        ArrayList<Integer> intArrayList = new ArrayList<>(arrayListSize);
+        Random random = new Random();
+        for (int i = 0; i < arrayListSize; i++) {
+            intArrayList.add(random.nextInt(-maxValue, maxValue));
         }
         return intArrayList;
     }
 
     public static void printNextBigger(ArrayList<Integer> intArrayList) {
-        for (int i = 0; i < intArrayList.size() - 1; i++) {
-            if (intArrayList.get(i) < intArrayList.get(i + 1)) {
-                System.out.print(intArrayList.get(i + 1) + " ");
+        for (int i = 1; i < intArrayList.size(); i++) {
+            if (intArrayList.get(i) > intArrayList.get(i - 1)) {
+                System.out.print(intArrayList.get(i) + " ");
             }
         }
         System.out.println();
     }
 
     public static int minPositiveOfArrayList(ArrayList<Integer> intArrayList) {
-        ArrayList<Integer> positiveArrayList = new ArrayList<>();
-        for (int i = 0; i < intArrayList.size(); i++) {
-            if (intArrayList.get(i) > 0) {
-                positiveArrayList.add(intArrayList.get(i));
+        intArrayList.sort(Comparator.naturalOrder());
+        for (int number: intArrayList) {
+            if (number > 0) {
+                return number;
             }
         }
-        positiveArrayList.sort(Comparator.naturalOrder());
-        return positiveArrayList.get(0);
+        return 0;
     }
 }
